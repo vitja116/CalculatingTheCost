@@ -1,3 +1,0 @@
-/*C3*/SET SCHEMA PUBLIC
-CREATE TABLE IF NOT EXISTS operations (id INTEGER IDENTITY NOT NULL , discription VARCHAR(255), cost float,  status VARCHAR(10), end_date DATE, PRIMARY KEY (id))
-CREATE TABLE IF NOT EXISTS tasks(id INTEGER IDENTITY NOT NULL , operation_id INT, info VARCHAR(255), planed_count smallint, fact_count smallint, price float, cost float, is_completed boolean, PRIMARY KEY (id), FOREIGN KEY (operation_id) REFERENCES operations(id))

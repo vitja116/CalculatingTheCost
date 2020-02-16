@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Scanner;
 
 public class ConsoleHandler {
 
@@ -22,13 +23,8 @@ public class ConsoleHandler {
                 "\n" + "5 Create new task to operation" +
                 "\n" + "6 Close task" +
                 "\n" + "7 Cost of all operation between time");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String input = null;
-        try {
-            input = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Scanner reader = new Scanner(System.in);
+        String input = reader.nextLine();
 
         assert input != null;
         switch (input) {
@@ -109,21 +105,14 @@ public class ConsoleHandler {
 
     public List<OperationsEntity> getOperationBetweenTime() {
         System.out.println("Input start time(Format yyyy-mm-dd):");
-        BufferedReader startDateReader = new BufferedReader(new InputStreamReader(System.in));
-        String startDate = null;
-        try {
-            startDate = startDateReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner startDateReader = new Scanner(System.in);
+        String startDate = startDateReader.nextLine();
+
         System.out.println("Input end time(Format yyyy-mm-dd):");
-        BufferedReader endDateReader = new BufferedReader(new InputStreamReader(System.in));
-        String endDate = null;
-        try {
-            endDate = endDateReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner endDateReader = new Scanner(System.in);
+        String endDate = startDateReader.nextLine();
 
         return eventHandler.getOperationBetweenTime(startDate, endDate);
 
@@ -131,13 +120,10 @@ public class ConsoleHandler {
 
     public void getCostBetweenTime() {
         System.out.println("Input start time(Format 01-01-19):");
-        BufferedReader startDateReader = new BufferedReader(new InputStreamReader(System.in));
-        String startDate = null;
-        try {
-            startDate = startDateReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner startDateReader = new Scanner(System.in);
+        String startDate = startDateReader.nextLine();
+
         System.out.println("Input end time(Format 01-01-19):");
         BufferedReader endDateReader = new BufferedReader(new InputStreamReader(System.in));
         String endDate = null;
@@ -152,13 +138,10 @@ public class ConsoleHandler {
 
     public void createNewOperation() {
         System.out.println("Set description to operation:");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String input = null;
-        try {
-            input = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner reader = new Scanner(System.in);
+        String input = reader.nextLine();
+
         if (input != null) {
             eventHandler.createNewOperation(input);
             System.out.println("Created successfully");
@@ -167,40 +150,24 @@ public class ConsoleHandler {
 
     public void createNewTask() {
         System.out.println("Insert number of Operation:");
-        BufferedReader operationIDReader = new BufferedReader(new InputStreamReader(System.in));
-        int operationID = 0;
-        try {
-            operationID = Integer.parseInt(operationIDReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner operationIDReader = new Scanner(System.in);
+        int operationID = Integer.parseInt(operationIDReader.nextLine());
 
         System.out.println("Insert info:");
-        BufferedReader infoReader = new BufferedReader(new InputStreamReader(System.in));
-        String info = null;
-        try {
-            info = infoReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner infoReader = new Scanner(System.in);
+        String info = infoReader.nextLine();
 
         System.out.println("Insert planed count:");
-        BufferedReader countReader = new BufferedReader(new InputStreamReader(System.in));
-        int count = 0;
-        try {
-            count = Integer.parseInt(countReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner countReader = new Scanner(System.in);
+        int count = Integer.parseInt(countReader.nextLine());
 
         System.out.println("Insert price:");
-        BufferedReader priceReader = new BufferedReader(new InputStreamReader(System.in));
-        int price = 0;
-        try {
-            price = Integer.parseInt(priceReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner priceReader = new Scanner(System.in);
+        int price = Integer.parseInt(priceReader.nextLine());
 
         if (info != null) {
             eventHandler.createNewTask(operationID, info, count, price);
@@ -213,22 +180,14 @@ public class ConsoleHandler {
 
     public void closeTask() {
         System.out.println("Insert task id:");
-        BufferedReader taskIDReader = new BufferedReader(new InputStreamReader(System.in));
-        int taskID = 0;
-        try {
-            taskID = Integer.parseInt(taskIDReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner taskIDReader = new Scanner(System.in);
+        int taskID = Integer.parseInt(taskIDReader.nextLine());
 
         System.out.println("Insert fact. count:");
-        BufferedReader factCountReader = new BufferedReader(new InputStreamReader(System.in));
-        int factCount = 0;
-        try {
-            factCount = Integer.parseInt(factCountReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Scanner factCountReader = new Scanner(System.in);
+        int factCount = Integer.parseInt(factCountReader.nextLine());
 
         eventHandler.closeTask(taskID, factCount);
         System.out.println("Success");

@@ -1,7 +1,7 @@
 package Main.Console;
 
-import Main.Entitys.OperationsEntity;
-import Main.Entitys.TaskEntity;
+import Main.Entities.OperationsEntity;
+import Main.Entities.TaskEntity;
 import Main.EventHandler;
 
 import java.io.BufferedReader;
@@ -70,7 +70,7 @@ public class ConsoleHandler {
         } else {
             for (OperationsEntity value : opr) {
                 List<TaskEntity> task = eventHandler.getTasks(value.id);
-                System.out.println("-----Operations-----");
+                System.out.println("-----Operation-----");
                 switch (value.status) {
                     case "Project":
                         System.out.println("Operation number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
@@ -112,19 +112,19 @@ public class ConsoleHandler {
         System.out.println("Input end time(Format yyyy-mm-dd):");
 
         Scanner endDateReader = new Scanner(System.in);
-        String endDate = startDateReader.nextLine();
+        String endDate = endDateReader.nextLine();
 
         return eventHandler.getOperationBetweenTime(startDate, endDate);
 
     }
 
     public void getCostBetweenTime() {
-        System.out.println("Input start time(Format 01-01-19):");
+        System.out.println("Input start time(Format yyyy-mm-dd):");
 
         Scanner startDateReader = new Scanner(System.in);
         String startDate = startDateReader.nextLine();
 
-        System.out.println("Input end time(Format 01-01-19):");
+        System.out.println("Input end time(Format yyyy-mm-dd):");
         BufferedReader endDateReader = new BufferedReader(new InputStreamReader(System.in));
         String endDate = null;
         try {

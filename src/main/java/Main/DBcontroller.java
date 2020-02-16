@@ -1,7 +1,7 @@
 package Main;
 
-import Main.Entitys.OperationsEntity;
-import Main.Entitys.TaskEntity;
+import Main.Entities.OperationsEntity;
+import Main.Entities.TaskEntity;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -25,7 +25,7 @@ public class DBcontroller {
 
     public void initializeDB() throws SQLException {
         Connection con = connection();
-        con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS operations (id INTEGER IDENTITY NOT NULL , discription VARCHAR(255), cost float,  status VARCHAR(10), end_date DATE, PRIMARY KEY (id));");
+        con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS operations (id INTEGER IDENTITY NOT NULL , description VARCHAR(255), cost float,  status VARCHAR(10), end_date DATE, PRIMARY KEY (id));");
         con.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS tasks(id INTEGER IDENTITY NOT NULL , operation_id INT, info VARCHAR(255), planed_count smallint, fact_count smallint, price float, cost float, is_completed boolean, PRIMARY KEY (id), FOREIGN KEY (operation_id) REFERENCES operations(id));");
     }
 
@@ -49,13 +49,13 @@ public class DBcontroller {
             while (result.next()) {
                 if (result.getString("end_date") != null) {
                     operations.add(new OperationsEntity(result.getInt("id"),
-                            result.getString("discription"),
+                            result.getString("description"),
                             result.getFloat("cost"),
                             result.getString("status"),
                             LocalDate.parse(result.getString("end_date"))));
                 } else {
                     operations.add(new OperationsEntity(result.getInt("id"),
-                            result.getString("discription"),
+                            result.getString("description"),
                             result.getFloat("cost"),
                             result.getString("status"),
                             null));
@@ -77,7 +77,7 @@ public class DBcontroller {
         if (result != null) {
             while (result.next()) {
                 operations.add(new OperationsEntity(result.getInt("id"),
-                        result.getString("discription"),
+                        result.getString("description"),
                         result.getFloat("cost"),
                         result.getString("status"),
                         LocalDate.parse(result.getString("end_date"))));
@@ -107,10 +107,10 @@ public class DBcontroller {
         return task;
     }
 
-    public void insertNewOperation(String discription) throws SQLException {
+    public void insertNewOperation(String description) throws SQLException {
         Connection con = connection();
-        PreparedStatement pstmt = con.prepareStatement("INSERT INTO operations (discription,status,cost) VALUES (?,'Project', 0);");
-        pstmt.setString(1, discription);
+        PreparedStatement pstmt = con.prepareStatement("INSERT INTO operations (description,status,cost) VALUES (?,'Project', 0);");
+        pstmt.setString(1, description);
         pstmt.executeUpdate();
     }
 

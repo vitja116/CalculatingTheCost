@@ -1,4 +1,4 @@
-package Main.Entitys;
+package Main.Entities;
 
 public class TaskEntity {
     public int id;

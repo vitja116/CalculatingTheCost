@@ -1,7 +1,7 @@
 package Main;
 
-import Main.Entitys.OperationsEntity;
-import Main.Entitys.TaskEntity;
+import Main.Entities.OperationsEntity;
+import Main.Entities.TaskEntity;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ public class EventHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(opr.size() != 0){
-            for (OperationsEntity value: opr) {
-                if(value.status.equals("Completed")){
+        if (opr.size() != 0) {
+            for (OperationsEntity value : opr) {
+                if (value.status.equals("Completed")) {
                     sortedOpr.add(value);
                 }
             }
@@ -44,6 +44,9 @@ public class EventHandler {
 
 
     public List<TaskEntity> getTasks(int operationID) {
+        if (operationID < 0) {
+            return null;
+        }
         List<TaskEntity> tasks = new ArrayList<>();
         try {
             tasks = dbcontroller.getTask(operationID);
@@ -62,7 +65,7 @@ public class EventHandler {
         }
     }
 
-    public void createNewTask(int operationID, String info, int planedCount, int price){
+    public void createNewTask(int operationID, String info, int planedCount, int price) {
         try {
             dbcontroller.insertNewTask(operationID, info, planedCount, price);
         } catch (SQLException e) {
@@ -70,16 +73,16 @@ public class EventHandler {
         }
     }
 
-    public int getCostBetweenTime(String startDate, String endDate){
+    public int getCostBetweenTime(String startDate, String endDate) {
         int cost = 0;
         List<OperationsEntity> opr = getOperationBetweenTime(startDate, endDate);
-        for (OperationsEntity value: opr) {
-            cost+=value.cost;
+        for (OperationsEntity value : opr) {
+            cost += value.cost;
         }
         return cost;
     }
 
-    public void closeTask(int taskID, int factCount){
+    public void closeTask(int taskID, int factCount) {
         try {
             dbcontroller.closeTask(taskID, factCount);
         } catch (SQLException e) {

@@ -20,8 +20,7 @@ public class DBcontroller implements DBInterface {
             System.err.println("ERROR: failed to load HSQLDB JDBC driver.");
             e.printStackTrace();
         }
-        Connection c;
-        return c = DriverManager.getConnection("jdbc:hsqldb:mem:some", "SA", "");
+        return DriverManager.getConnection("jdbc:hsqldb:mem:some", "SA", "");
     }
 
     public void initializeDB() throws SQLException {
@@ -143,7 +142,7 @@ public class DBcontroller implements DBInterface {
         double price = taskPrice * Float.parseFloat(factCount);
 
         PreparedStatement pstmtUpdate = con.prepareStatement("UPDATE tasks SET fact_count = ?, cost = ?, is_completed = true WHERE id = ?");
-        pstmtUpdate.setString(1, String.valueOf(factCount));
+        pstmtUpdate.setString(1, factCount);
         pstmtUpdate.setString(2, String.valueOf(price));
         pstmtUpdate.setString(3, String.valueOf(taskID));
         pstmtUpdate.executeUpdate();

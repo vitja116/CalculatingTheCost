@@ -1,7 +1,7 @@
 package Main.Console;
 
-import Main.Entities.OperationsEntity;
-import Main.Entities.TaskEntity;
+import Main.Entities.TasksEntity;
+import Main.Entities.TaskOperationsEntity;
 import Main.Interfaces.GuiInterface;
 
 import java.util.ArrayList;
@@ -12,13 +12,13 @@ public class ConsoleHandler implements GuiInterface {
 
     public void mainScreen() {
         System.out.println("You are now on main screen" +
-                "\n" + "1 Show all operations" +
-                "\n" + "2 Create new operations" +
-                "\n" + "3 Show opened operation" +
-                "\n" + "4 Show closed operation between time" +
-                "\n" + "5 Create new task to operation" +
-                "\n" + "6 Close task" +
-                "\n" + "7 Cost of all operation between time");
+                "\n" + "1 Show all tasks" +
+                "\n" + "2 Create new task" +
+                "\n" + "3 Show opened tasks" +
+                "\n" + "4 Show closed tasks between time" +
+                "\n" + "5 Create new operation to task" +
+                "\n" + "6 Close operation" +
+                "\n" + "7 Cost of all tasks between time");
     }
 
     public int getEventNumber() {
@@ -47,25 +47,25 @@ public class ConsoleHandler implements GuiInterface {
         }
     }
 
-    public void outputOperationsAndTasks(List<OperationsEntity> opr, List<TaskEntity> task) {
-        if (opr.size() == 0) {
-            System.out.println("You don't have selected operations.");
+    public void outputOperationsAndTasks(List<TasksEntity> tasks, List<TaskOperationsEntity> opr) {
+        if (tasks.size() == 0) {
+            System.out.println("You don't have selected tasks.");
         } else {
-            for (OperationsEntity value : opr) {
-                System.out.println("-----Operation-----");
+            for (TasksEntity value : tasks) {
+                System.out.println("-----Tasks-----");
                 switch (value.status) {
                     case "Project":
-                        System.out.println("Operation number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
+                        System.out.println("Task number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
                         break;
                     case "inProgress":
-                        System.out.println("Operation number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
-                        System.out.println("---- Tasks ----");
-                        taskOutputByID(task, value.id);
+                        System.out.println("Task number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
+                        System.out.println("---- Operations ----");
+                        operationOutputByID(opr, value.id);
                         break;
                     case "Completed":
-                        System.out.println("Operation number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
-                        System.out.println("---- Tasks ----");
-                        taskOutputByID(task, value.id);
+                        System.out.println("Task number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
+                        System.out.println("---- Operations ----");
+                        operationOutputByID(opr, value.id);
                         break;
                 }
 
@@ -74,8 +74,8 @@ public class ConsoleHandler implements GuiInterface {
         }
     }
 
-    public String getNewOperationData() {
-        System.out.println("Set description to operation:");
+    public String getNewTaskData() {
+        System.out.println("Set description to task:");
 
         Scanner reader = new Scanner(System.in);
         String input = reader.nextLine();
@@ -87,13 +87,13 @@ public class ConsoleHandler implements GuiInterface {
         return null;
     }
 
-    public void outputNewOperationStatus(String status) {
+    public void outputNewTaskStatus(String status) {
         System.out.println(status);
     }
 
-    public void taskOutputByID(List<TaskEntity> task, int oprID) {
-        for (TaskEntity value : task) {
-            if (value.operationID == oprID) {
+    public void operationOutputByID(List<TaskOperationsEntity> opr, int taskID) {
+        for (TaskOperationsEntity value : opr) {
+            if (value.operationID == taskID) {
                 if (value.isCompleted) {
                     System.out.println("Task number " + value.id + " Completed" + "\n" + "Info:" + "\n" + value.info + "\n" + "Planed count:" + "\n" + value.planedCount + "\n" + "Fact count:" + "\n" + value.factCount + "\n" + "Price:" + "\n" + value.price + "\n" + "Cost:" + "\n" + value.cost);
                 } else {
@@ -104,7 +104,7 @@ public class ConsoleHandler implements GuiInterface {
         }
     }
 
-    public List<String> getOperationBetweenTimeData() {
+    public List<String> getTasksBetweenTimeData() {
         List<String> time = new ArrayList<>();
         System.out.println("Input start time(Format yyyy-mm-dd):");
 
@@ -122,22 +122,22 @@ public class ConsoleHandler implements GuiInterface {
         return time;
     }
 
-    public void errorLogForOperationBetweenTime() {
+    public void errorLogForTasksBetweenTime() {
         System.out.println("Invalid format");
     }
 
-    public void outputForOperationBetweenTime(List<OperationsEntity> opr) {
-        for (OperationsEntity value : opr) {
-            System.out.println("-----Operation-----");
+    public void outputForTasksBetweenTime(List<TasksEntity> tasks) {
+        for (TasksEntity value : tasks) {
+            System.out.println("-----Tasks-----");
             switch (value.status) {
                 case "Project":
-                    System.out.println("Operation number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
+                    System.out.println("Task number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
                     break;
                 case "inProgress":
-                    System.out.println("Operation number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
+                    System.out.println("Task number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
                     break;
                 case "Completed":
-                    System.out.println("Operation number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
+                    System.out.println("Task number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
                     break;
             }
 
@@ -145,13 +145,13 @@ public class ConsoleHandler implements GuiInterface {
         }
     }
 
-    public List<String> getNewTaskInfo() {
+    public List<String> getNewOperationInfo() {
         List<String> infoList = new ArrayList<>();
-        System.out.println("Insert number of Operation:");
+        System.out.println("Insert number of Task:");
 
-        Scanner operationIDReader = new Scanner(System.in);
-        String operationID = operationIDReader.nextLine();
-        infoList.add(operationID);
+        Scanner taskIDReader = new Scanner(System.in);
+        String taskID = taskIDReader.nextLine();
+        infoList.add(taskID);
 
         System.out.println("Insert info:");
 
@@ -175,17 +175,17 @@ public class ConsoleHandler implements GuiInterface {
 
     }
 
-    public void outputForNewTask(String status) {
+    public void outputForNewOperation(String status) {
         System.out.println(status);
     }
 
-    public List<String> getCloseTaskInfo() {
+    public List<String> getCloseOperationInfo() {
         List<String> taskInfo = new ArrayList<>();
-        System.out.println("Insert task id:");
+        System.out.println("Insert operation id:");
 
-        Scanner taskIDReader = new Scanner(System.in);
-        String taskID = taskIDReader.nextLine();
-        taskInfo.add(taskID);
+        Scanner operationIDReader = new Scanner(System.in);
+        String operationID = operationIDReader.nextLine();
+        taskInfo.add(operationID);
 
         System.out.println("Insert fact. count:");
 
@@ -196,7 +196,7 @@ public class ConsoleHandler implements GuiInterface {
         return taskInfo;
     }
 
-    public void outputForCloseTask(String status) {
+    public void outputForCloseOperation(String status) {
         System.out.println(status);
     }
 

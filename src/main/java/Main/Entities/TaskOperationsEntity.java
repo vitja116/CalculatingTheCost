@@ -1,6 +1,6 @@
 package Main.Entities;
 
-public class TaskEntity {
+public class TaskOperationsEntity {
     public int id;
 
     public int operationID;
@@ -17,7 +17,7 @@ public class TaskEntity {
 
     public boolean isCompleted;
 
-    public TaskEntity(int id, int operationID, String info, int planedCount, int factCount, float price, float cost, boolean isCompleted) {
+    public TaskOperationsEntity(int id, int operationID, String info, int planedCount, int factCount, float price, float cost, boolean isCompleted) {
         this.id = id;
         this.operationID = operationID;
         this.info = info;

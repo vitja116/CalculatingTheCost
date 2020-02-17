@@ -2,7 +2,7 @@ package Main.Entities;
 
 import java.time.LocalDate;
 
-public class OperationsEntity {
+public class TasksEntity {
 
     public int id;
 
@@ -14,7 +14,7 @@ public class OperationsEntity {
 
     public LocalDate endDate;
 
-    public OperationsEntity(int id, String description, float cost, String status, LocalDate endDate) {
+    public TasksEntity(int id, String description, float cost, String status, LocalDate endDate) {
         this.id = id;
         this.description = description;
         this.cost = cost;

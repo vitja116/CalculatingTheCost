@@ -1,6 +1,6 @@
 package Main;
 
-import Main.Entities.OperationsEntity;
+import Main.Entities.TasksEntity;
 import Main.Interfaces.DBInterface;
 import Main.Interfaces.GuiInterface;
 
@@ -40,13 +40,13 @@ public class MainHandler {
 
     /**
      * 0 Error
-     * 1 Show all operations and Tasks
-     * 2 Create new operations
-     * 3 Show opened operation
-     * 4 Show closed operation between time
-     * 5 Create new task to operation
-     * 6 Close task
-     * 7 Cost of all operation between time
+     * 1 Show all tasks and Tasks
+     * 2 Create new task
+     * 3 Show opened tasks
+     * 4 Show closed tasks between time
+     * 5 Create new operation to task
+     * 6 Close operation
+     * 7 Cost of all tasks between time
      */
     public void eventHandler(int eventNumber) throws SQLException {
 
@@ -54,51 +54,51 @@ public class MainHandler {
             case 0:
                 break;
             case 1:
-                guiInterface.outputOperationsAndTasks(dbInterface.getOperations("All"), dbInterface.getTask());
+                guiInterface.outputOperationsAndTasks(dbInterface.getTasks("All"), dbInterface.getTaskOperations());
                 break;
             case 2:
-                String desck = guiInterface.getNewOperationData();
+                String desck = guiInterface.getNewTaskData();
                 if (dataCheck.checkDescription(desck)) {
-                    dbInterface.insertNewOperation(desck);
-                    guiInterface.outputNewOperationStatus("Success");
+                    dbInterface.insertNewTaskOperation(desck);
+                    guiInterface.outputNewTaskStatus("Success");
                 } else
-                    guiInterface.outputNewOperationStatus("Error invalid description");
+                    guiInterface.outputNewTaskStatus("Error invalid description");
                 break;
             case 3:
-                guiInterface.outputOperationsAndTasks(dbInterface.getOperations("Opened"), dbInterface.getTask());
+                guiInterface.outputOperationsAndTasks(dbInterface.getTasks("Opened"), dbInterface.getTaskOperations());
                 break;
             case 4:
-                List<String> date = guiInterface.getOperationBetweenTimeData();
+                List<String> date = guiInterface.getTasksBetweenTimeData();
                 if (dataCheck.checkStartDateAndEndDate(date)) {
-                    guiInterface.outputForOperationBetweenTime(dbInterface.getOperationBetweenTime(date.get(0), date.get(1)));
+                    guiInterface.outputForTasksBetweenTime(dbInterface.getTasksBetweenTime(date.get(0), date.get(1)));
                 } else {
-                    guiInterface.errorLogForOperationBetweenTime();
+                    guiInterface.errorLogForTasksBetweenTime();
                 }
                 break;
             case 5:
-                List<String> taskInfo = guiInterface.getNewTaskInfo();
-                if (dataCheck.checkTaskInfo(taskInfo)) {
-                    dbInterface.insertNewTask(taskInfo.get(0), taskInfo.get(1), taskInfo.get(2), taskInfo.get(3));
-                    guiInterface.outputForNewTask("Success");
+                List<String> operationInfo = guiInterface.getNewOperationInfo();
+                if (dataCheck.checkTaskInfo(operationInfo)) {
+                    dbInterface.insertNewTaskOperation(operationInfo.get(0), operationInfo.get(1), operationInfo.get(2), operationInfo.get(3));
+                    guiInterface.outputForNewOperation("Success");
                 } else {
-                    guiInterface.outputForNewTask("Error invalid data");
+                    guiInterface.outputForNewOperation("Error invalid data");
                 }
                 break;
             case 6:
-                List<String> closeTaskInfo = guiInterface.getCloseTaskInfo();
-                if (dataCheck.checkCloseTaskInfo(closeTaskInfo)) {
-                    dbInterface.closeTask(closeTaskInfo.get(0), closeTaskInfo.get(1));
-                    guiInterface.outputForCloseTask("Success");
+                List<String> closeOperationInfo = guiInterface.getCloseOperationInfo();
+                if (dataCheck.checkCloseTaskInfo(closeOperationInfo)) {
+                    dbInterface.closeTaskOperations(closeOperationInfo.get(0), closeOperationInfo.get(1));
+                    guiInterface.outputForCloseOperation("Success");
                 } else {
-                    guiInterface.outputForCloseTask("Error invalid data");
+                    guiInterface.outputForCloseOperation("Error invalid data");
                 }
                 break;
             case 7:
                 List<String> dateCost = guiInterface.getCostBetweenTimeInfo();
                 if (dataCheck.checkStartDateAndEndDate(dateCost)) {
                     int cost = 0;
-                    List<OperationsEntity> opr = dbInterface.getOperationBetweenTime(dateCost.get(0), dateCost.get(1));
-                    for (OperationsEntity value : opr) {
+                    List<TasksEntity> opr = dbInterface.getTasksBetweenTime(dateCost.get(0), dateCost.get(1));
+                    for (TasksEntity value : opr) {
                         cost += value.cost;
                     }
                     guiInterface.outputCostBetweenTime(cost);

@@ -1,7 +1,7 @@
 package Main.Interfaces;
 
-import Main.Entities.OperationsEntity;
-import Main.Entities.TaskEntity;
+import Main.Entities.TasksEntity;
+import Main.Entities.TaskOperationsEntity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,15 +17,15 @@ public interface DBInterface {
      * All - all operations
      * Opened - only opened operations
      */
-    List<OperationsEntity> getOperations(String param) throws SQLException;
+    List<TasksEntity> getTasks(String param) throws SQLException;
 
-    List<OperationsEntity> getOperationBetweenTime(String startDate, String endDate) throws SQLException;
+    List<TasksEntity> getTasksBetweenTime(String startDate, String endDate) throws SQLException;
 
-    List<TaskEntity> getTask() throws SQLException;
+    List<TaskOperationsEntity> getTaskOperations() throws SQLException;
 
-    void insertNewOperation(String description) throws SQLException;
+    void insertNewTaskOperation(String description) throws SQLException;
 
-    void insertNewTask(String operationID, String info, String planedCount, String price) throws SQLException;
+    void insertNewTaskOperation(String operationID, String info, String planedCount, String price) throws SQLException;
 
-    void closeTask(String taskID, String factCount) throws SQLException;
+    void closeTaskOperations(String taskID, String factCount) throws SQLException;
 }

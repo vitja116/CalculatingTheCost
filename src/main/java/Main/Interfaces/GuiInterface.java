@@ -1,7 +1,7 @@
 package Main.Interfaces;
 
-import Main.Entities.OperationsEntity;
-import Main.Entities.TaskEntity;
+import Main.Entities.TasksEntity;
+import Main.Entities.TaskOperationsEntity;
 
 import java.util.List;
 
@@ -11,25 +11,25 @@ public interface GuiInterface {
 
     int getEventNumber();
 
-    void outputOperationsAndTasks(List<OperationsEntity> opr, List<TaskEntity> task);
+    void outputOperationsAndTasks(List<TasksEntity> tasks, List<TaskOperationsEntity> opr);
 
-    String getNewOperationData();
+    String getNewTaskData();
 
-    void outputNewOperationStatus(String status);
+    void outputNewTaskStatus(String status);
 
-    List<String> getOperationBetweenTimeData();
+    List<String> getTasksBetweenTimeData();
 
-    void errorLogForOperationBetweenTime();
+    void errorLogForTasksBetweenTime();
 
-    void outputForOperationBetweenTime(List<OperationsEntity> opr);
+    void outputForTasksBetweenTime(List<TasksEntity> tasks);
 
-    List<String> getNewTaskInfo();
+    List<String> getNewOperationInfo();
 
-    void outputForNewTask(String status);
+    void outputForNewOperation(String status);
 
-    List<String> getCloseTaskInfo();
+    List<String> getCloseOperationInfo();
 
-    void outputForCloseTask(String status);
+    void outputForCloseOperation(String status);
 
     List<String> getCostBetweenTimeInfo();
 

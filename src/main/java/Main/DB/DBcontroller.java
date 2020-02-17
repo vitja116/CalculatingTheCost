@@ -1,7 +1,8 @@
-package Main;
+package Main.DB;
 
 import Main.Entities.OperationsEntity;
 import Main.Entities.TaskEntity;
+import Main.Interfaces.DBInterface;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DBcontroller {
+public class DBcontroller implements DBInterface {
 
     public Connection connection() throws SQLException {
         try {
@@ -86,12 +87,10 @@ public class DBcontroller {
         return operations;
     }
 
-    public List<TaskEntity> getTask(int operationID) throws SQLException {
+    public List<TaskEntity> getTask() throws SQLException {
         Connection con = connection();
         List<TaskEntity> task = new ArrayList<>();
-        PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tasks WHERE operation_id = ?;");
-        pstmt.setString(1, String.valueOf(operationID));
-        ResultSet result = pstmt.executeQuery();
+        ResultSet result = con.createStatement().executeQuery("SELECT * FROM tasks;");
         if (result != null) {
             while (result.next()) {
                 task.add(new TaskEntity(result.getInt("id"),
@@ -114,19 +113,21 @@ public class DBcontroller {
         pstmt.executeUpdate();
     }
 
-    public void insertNewTask(int operationID, String info, int planedCount, int price) throws SQLException {
+    public void insertNewTask(String operationID, String info, String planedCount, String price) throws SQLException {
         Connection con = connection();
+        int cost = Integer.parseInt(price) * Integer.parseInt(planedCount);
+
         PreparedStatement pstmt = con.prepareStatement("INSERT INTO tasks (operation_id, info, planed_count, price,cost, is_completed) VALUES (?,?,?,?,?,FALSE);");
         pstmt.setString(1, String.valueOf(operationID));
         pstmt.setString(2, info);
-        pstmt.setString(3, String.valueOf(planedCount));
-        pstmt.setString(4, String.valueOf(price));
-        pstmt.setString(5, String.valueOf(price * planedCount));
+        pstmt.setString(3, planedCount);
+        pstmt.setString(4, price);
+        pstmt.setString(5, String.valueOf(cost));
         pstmt.executeUpdate();
-        updateOperationTables(operationID);
+        updateOperationTables(Integer.parseInt(operationID));
     }
 
-    public void closeTask(int taskID, int factCount) throws SQLException {
+    public void closeTask(String taskID, String factCount) throws SQLException {
         Connection con = connection();
 
         PreparedStatement pstmtGet = con.prepareStatement("SELECT * FROM tasks WHERE id = ?");
@@ -139,7 +140,7 @@ public class DBcontroller {
             taskPrice = result.getFloat("price");
             oprID = result.getInt("operation_id");
         }
-        double price = taskPrice * (float) factCount;
+        double price = taskPrice * Float.parseFloat(factCount);
 
         PreparedStatement pstmtUpdate = con.prepareStatement("UPDATE tasks SET fact_count = ?, cost = ?, is_completed = true WHERE id = ?");
         pstmtUpdate.setString(1, String.valueOf(factCount));
@@ -152,7 +153,7 @@ public class DBcontroller {
 
     public void updateOperationTables(int operationID) throws SQLException {
         Connection con = connection();
-        List<TaskEntity> tasks = getTask(operationID);
+        List<TaskEntity> tasks = getTaskByOperationID(operationID);
         String timeNow = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String standartDate = "1900-01-01";
 
@@ -192,5 +193,26 @@ public class DBcontroller {
 
         }
         pstmtOperationsUpdate.executeUpdate();
+    }
+
+    public List<TaskEntity> getTaskByOperationID(int operationID) throws SQLException {
+        Connection con = connection();
+        List<TaskEntity> task = new ArrayList<>();
+        PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tasks WHERE operation_id = ?;");
+        pstmt.setString(1, String.valueOf(operationID));
+        ResultSet result = pstmt.executeQuery();
+        if (result != null) {
+            while (result.next()) {
+                task.add(new TaskEntity(result.getInt("id"),
+                        result.getInt("operation_id"),
+                        result.getString("info"),
+                        result.getInt("planed_count"),
+                        result.getInt("fact_count"),
+                        result.getFloat("price"),
+                        result.getFloat("cost"),
+                        result.getBoolean("is_completed")));
+            }
+        }
+        return task;
     }
 }

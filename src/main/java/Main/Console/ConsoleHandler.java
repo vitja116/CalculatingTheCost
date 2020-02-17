@@ -2,17 +2,13 @@ package Main.Console;
 
 import Main.Entities.OperationsEntity;
 import Main.Entities.TaskEntity;
-import Main.EventHandler;
+import Main.Interfaces.GuiInterface;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleHandler {
-
-    public EventHandler eventHandler = new EventHandler();
+public class ConsoleHandler implements GuiInterface {
 
     public void mainScreen() {
         System.out.println("You are now on main screen" +
@@ -23,53 +19,39 @@ public class ConsoleHandler {
                 "\n" + "5 Create new task to operation" +
                 "\n" + "6 Close task" +
                 "\n" + "7 Cost of all operation between time");
+    }
+
+    public int getEventNumber() {
         Scanner reader = new Scanner(System.in);
         String input = reader.nextLine();
 
         assert input != null;
         switch (input) {
             case "1":
-                getAllOperations("All");
-                break;
+                return 1;
             case "2":
-                createNewOperation();
-                break;
+                return 2;
             case "3":
-                getAllOperations("Opened");
-                break;
+                return 3;
             case "4":
-                getAllOperations("Time");
-                break;
+                return 4;
             case "5":
-                createNewTask();
-                break;
+                return 5;
             case "6":
-                closeTask();
-                break;
+                return 6;
             case "7":
-                getCostBetweenTime();
+                return 7;
             default:
                 System.out.println("Something wrong");
-                mainScreen();
-                break;
+                return 0;
         }
-        mainScreen();
     }
 
-    // All Opened Time
-    public void getAllOperations(String param) {
-        List<OperationsEntity> opr;
-        if (param.equals("Time")) {
-            opr = getOperationBetweenTime();
-        } else {
-            opr = eventHandler.getOperations(param);
-        }
-
+    public void outputOperationsAndTasks(List<OperationsEntity> opr, List<TaskEntity> task) {
         if (opr.size() == 0) {
             System.out.println("You don't have selected operations.");
         } else {
             for (OperationsEntity value : opr) {
-                List<TaskEntity> task = eventHandler.getTasks(value.id);
                 System.out.println("-----Operation-----");
                 switch (value.status) {
                     case "Project":
@@ -78,12 +60,12 @@ public class ConsoleHandler {
                     case "inProgress":
                         System.out.println("Operation number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
                         System.out.println("---- Tasks ----");
-                        taskOutput(task);
+                        taskOutputByID(task, value.id);
                         break;
                     case "Completed":
                         System.out.println("Operation number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
                         System.out.println("---- Tasks ----");
-                        taskOutput(task);
+                        taskOutputByID(task, value.id);
                         break;
                 }
 
@@ -92,18 +74,38 @@ public class ConsoleHandler {
         }
     }
 
-    public void taskOutput(List<TaskEntity> task) {
+    public String getNewOperationData() {
+        System.out.println("Set description to operation:");
+
+        Scanner reader = new Scanner(System.in);
+        String input = reader.nextLine();
+
+        if (input != null) {
+            return input;
+        }
+        System.out.println("Incorrect input");
+        return null;
+    }
+
+    public void outputNewOperationStatus(String status) {
+        System.out.println(status);
+    }
+
+    public void taskOutputByID(List<TaskEntity> task, int oprID) {
         for (TaskEntity value : task) {
-            if (value.isCompleted) {
-                System.out.println("Task number " + value.id + " Completed" + "\n" + "Info:" + "\n" + value.info + "\n" + "Planed count:" + "\n" + value.planedCount + "\n" + "Fact count:" + "\n" + value.factCount + "\n" + "Price:" + "\n" + value.price + "\n" + "Cost:" + "\n" + value.cost);
-            } else {
-                System.out.println("Task number " + value.id + " In Progress" + "\n" + "Info:" + "\n" + value.info + "\n" + "Planed count:" + "\n" + value.planedCount + "\n" + "Price:" + "\n" + value.price + "\n" + "Cost:" + "\n" + value.cost);
+            if (value.operationID == oprID) {
+                if (value.isCompleted) {
+                    System.out.println("Task number " + value.id + " Completed" + "\n" + "Info:" + "\n" + value.info + "\n" + "Planed count:" + "\n" + value.planedCount + "\n" + "Fact count:" + "\n" + value.factCount + "\n" + "Price:" + "\n" + value.price + "\n" + "Cost:" + "\n" + value.cost);
+                } else {
+                    System.out.println("Task number " + value.id + " In Progress" + "\n" + "Info:" + "\n" + value.info + "\n" + "Planed count:" + "\n" + value.planedCount + "\n" + "Price:" + "\n" + value.price + "\n" + "Cost:" + "\n" + value.cost);
+                }
+                System.out.println("---------------");
             }
-            System.out.println("---------------");
         }
     }
 
-    public List<OperationsEntity> getOperationBetweenTime() {
+    public List<String> getOperationBetweenTimeData() {
+        List<String> time = new ArrayList<>();
         System.out.println("Input start time(Format yyyy-mm-dd):");
 
         Scanner startDateReader = new Scanner(System.in);
@@ -114,83 +116,113 @@ public class ConsoleHandler {
         Scanner endDateReader = new Scanner(System.in);
         String endDate = endDateReader.nextLine();
 
-        return eventHandler.getOperationBetweenTime(startDate, endDate);
+        time.add(endDate);
+        time.add(startDate);
 
+        return time;
     }
 
-    public void getCostBetweenTime() {
-        System.out.println("Input start time(Format yyyy-mm-dd):");
-
-        Scanner startDateReader = new Scanner(System.in);
-        String startDate = startDateReader.nextLine();
-
-        System.out.println("Input end time(Format yyyy-mm-dd):");
-        BufferedReader endDateReader = new BufferedReader(new InputStreamReader(System.in));
-        String endDate = null;
-        try {
-            endDate = endDateReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Cost equals " + eventHandler.getCostBetweenTime(startDate, endDate) + " Euro.");
+    public void errorLogForOperationBetweenTime() {
+        System.out.println("Invalid format");
     }
 
-    public void createNewOperation() {
-        System.out.println("Set description to operation:");
+    public void outputForOperationBetweenTime(List<OperationsEntity> opr) {
+        for (OperationsEntity value : opr) {
+            System.out.println("-----Operation-----");
+            switch (value.status) {
+                case "Project":
+                    System.out.println("Operation number " + value.id + " Project" + "\n" + "Description:" + "\n" + value.description);
+                    break;
+                case "inProgress":
+                    System.out.println("Operation number " + value.id + " In Progress" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost);
+                    break;
+                case "Completed":
+                    System.out.println("Operation number " + value.id + " Completed" + "\n" + "Description:" + "\n" + value.description + "\n" + "Cost:" + "\n" + value.cost + "\n" + "Competed date:" + "\n" + value.endDate);
+                    break;
+            }
 
-        Scanner reader = new Scanner(System.in);
-        String input = reader.nextLine();
-
-        if (input != null) {
-            eventHandler.createNewOperation(input);
-            System.out.println("Created successfully");
+            System.out.println("--------------------");
         }
     }
 
-    public void createNewTask() {
+    public List<String> getNewTaskInfo() {
+        List<String> infoList = new ArrayList<>();
         System.out.println("Insert number of Operation:");
 
         Scanner operationIDReader = new Scanner(System.in);
-        int operationID = Integer.parseInt(operationIDReader.nextLine());
+        String operationID = operationIDReader.nextLine();
+        infoList.add(operationID);
 
         System.out.println("Insert info:");
 
         Scanner infoReader = new Scanner(System.in);
         String info = infoReader.nextLine();
+        infoList.add(info);
 
         System.out.println("Insert planed count:");
 
         Scanner countReader = new Scanner(System.in);
-        int count = Integer.parseInt(countReader.nextLine());
+        String count = countReader.nextLine();
+        infoList.add(count);
 
         System.out.println("Insert price:");
 
         Scanner priceReader = new Scanner(System.in);
-        int price = Integer.parseInt(priceReader.nextLine());
+        String price = priceReader.nextLine();
+        infoList.add(price);
 
-        if (info != null) {
-            eventHandler.createNewTask(operationID, info, count, price);
-            System.out.println("Success");
-        } else {
-            System.out.println("Error! you didn't insert some values");
-        }
+        return infoList;
 
     }
 
-    public void closeTask() {
+    public void outputForNewTask(String status) {
+        System.out.println(status);
+    }
+
+    public List<String> getCloseTaskInfo() {
+        List<String> taskInfo = new ArrayList<>();
         System.out.println("Insert task id:");
 
         Scanner taskIDReader = new Scanner(System.in);
-        int taskID = Integer.parseInt(taskIDReader.nextLine());
+        String taskID = taskIDReader.nextLine();
+        taskInfo.add(taskID);
 
         System.out.println("Insert fact. count:");
 
         Scanner factCountReader = new Scanner(System.in);
-        int factCount = Integer.parseInt(factCountReader.nextLine());
+        String factCount = factCountReader.nextLine();
+        taskInfo.add(factCount);
 
-        eventHandler.closeTask(taskID, factCount);
-        System.out.println("Success");
+        return taskInfo;
+    }
+
+    public void outputForCloseTask(String status) {
+        System.out.println(status);
+    }
+
+    public List<String> getCostBetweenTimeInfo() {
+        List<String> date = new ArrayList<>();
+        System.out.println("Input start time(Format yyyy-mm-dd):");
+
+        Scanner startDateReader = new Scanner(System.in);
+        String startDate = startDateReader.nextLine();
+        date.add(startDate);
+
+        System.out.println("Input end time(Format yyyy-mm-dd):");
+
+        Scanner endDateReader = new Scanner(System.in);
+        String endDate = endDateReader.nextLine();
+        date.add(endDate);
+
+        return date;
+    }
+
+    public void errorLogForCostBetweenTime(String error) {
+        System.out.println(error);
+    }
+
+    public void outputCostBetweenTime(int cost) {
+        System.out.println("Cost equals " + cost + " Euro.");
     }
 
 }
